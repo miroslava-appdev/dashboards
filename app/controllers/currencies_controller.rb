@@ -9,7 +9,20 @@ class CurrenciesController < ApplicationController
     @symbols_hash = @parsed_data.fetch("symbols")
     #this helped clean up the format of our data by eliminating things and keeping the keys such as AED, AFN, etc. Now, we need to work with the keys
     @array_of_symbols = @symbols_hash.keys
-    render({:template => "currency_templates/step_one.html.erb"})
-
+    render({:template => "currency_templates/step_one.html.erb" })
   end
+
+  def second_currency
+
+    @raw_data = open("https://api.exchangerate.host/symbols").read
+    @parsed_data = JSON.parse(@raw_data)
+    @symbols_hash = @parsed_data.fetch("symbols")
+
+    @array_of_symbols = @symbols_hash.keys
+
+    # params are
+    # Parameters: {"from_currency"=>"ARS"}
+    @from_symbol = params.fetch("from_currency")
+    render({:template => "currency_templates/step_two.html.erb" })
+  end 
 end
